@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">FoodMeUp</string>
+    <string name="title_activity_maps">FoodMeUp</string>
+
+    <string name="information_menu_item">information</string>
+
+    <string name="privacy_dialog_title_text">Privacybeleid</string>
+    <string name="privacy_dialog_text">Om deze app te gebruiken, dient u \n het privacybeleid te accepteren.</string>
+    <string name="privacy_dialog_hyperlink">http://www.rsr.nl/index.php?page=privacy-wetgeving</string>
+    <string name="privacy_dialog_confirm">BEVESTIG</string>
+    <string name="privacy_dialog_privacy_policy_hyperlink_text">privacybeleid</string>
+
+    <string name="maps_activity_title">RSR Pechhulp</string>
+    <string name="maps_activity_call_button_text">Bel RSR nu</string>
+
+    <string name="popup_address_title_dutch">Uw Locatie:</string>
+    <string name="popup_address_obtaining">Current Address&#8230;</string>
+    <string name="popup_address_info_dutch">Onthoud deze locatie voor het telefoongesprek.</string>
+
+    <string name="error_gps_disabled_message">Uw GPS is uitgeschakeld. Schakel het alstublieft in om door te gaan.</string>
+    <string name="error_gps_disabled_title">GPS uitgeschakeld</string>
+
+    <string name="error_network_message">Uw netwerk is uitgeschakeld. Schakel het alstublieft in om door te gaan.</string>
+    <string name="error_network_title">Netwerk is uitgeschakeld</string>
+
+    <string name="error_accept">Aanzetten</string>
+    <string name="all_cancel">Annuleren</string>
+
+    <string name="phone">+31900 77 88 99 0</string>
+    <string name="call_popup_frame_layout_cost_info_text">Voor dit nummer betaalt u uw gebruikelijke belkosten.</string>
+    <string name="call_popup_button_text">Bel nu</string>
+    <string name="call_popup_frame_layout_button_text">Annuleren</string>
+    <string name="call_popup_frame_layout_title_text">Belcosten</string>
+
+    <string name="maps_frame_contact_info">Neem contact op met RSR Nederland</string>
+
+    <string name="tablet_frame_description_icon">tablet frame telephone icon</string>
+    <string name="mapView">mapView</string>
+    <string name="img">img</string>
+    <string name="my_address">My Address</string>
+    <string name="locating_address">Locating Address…</string>
+</resources>
