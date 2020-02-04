@@ -1,12 +1,20 @@
-package com.example.foodmeup;
+package com.example.foodmeup.utils;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.foodmeup.api.APIHandlingService;
+import com.example.foodmeup.api.RetrofitRequestClass;
+import com.example.foodmeup.models.ResponseModel;
+import com.example.foodmeup.models.Venues;
+import com.example.foodmeup.ui.MapsActivity;
+import com.example.foodmeup.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -19,29 +27,37 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-class MapUtils implements GoogleMap.OnCameraIdleListener {
+public class MapUtils implements GoogleMap.OnCameraIdleListener {
 
     static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
-    private static GoogleMap mMap;
+    public static GoogleMap mMap;
     private static LocationRequest mLocationRequest;
     private static List<Location> locationList;
     private static LatLng latLng = new LatLng(0, 0);
     private static boolean isFirstTime = true;
-    private static String lastAddress;
-    private static Marker mCurrLocationMarker;
+    public static Marker mCurrLocationMarker;
     private final MapsActivity ma = new MapsActivity();
+    private static String latlong;
+    private static Venues[] venues;
+    private static ArrayList<Venues> venuesList = new ArrayList<>();
 
-    static FusedLocationProviderClient registerFusedLocationClient(MapsActivity mapsActivity) {
+    public static FusedLocationProviderClient registerFusedLocationClient(MapsActivity mapsActivity) {
         return LocationServices.getFusedLocationProviderClient(mapsActivity);
     }
 
-    static void setUpMap(
+    public static void setUpMap(
         GoogleMap googleMap, FusedLocationProviderClient mFusedLocationClient,
         LocationCallback mLocationCallback, MapsActivity mapsActivity) {
 
@@ -82,7 +98,7 @@ class MapUtils implements GoogleMap.OnCameraIdleListener {
 
     }
 
-    static LocationCallback getLocation(final MapsActivity mapsActivity) {
+    public static LocationCallback getLocation(MapsActivity mapsActivity) {
         return new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -107,19 +123,21 @@ class MapUtils implements GoogleMap.OnCameraIdleListener {
                             .infoWindowAnchor(0.5f, -0.2f)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
 
-                    //When the user moves the camera, the marker anchors itself to the center of the screen
-                    mMap.setOnCameraMoveListener(() -> {
-                        LatLng midLatLng = mMap.getCameraPosition().target;
-                        if (mCurrLocationMarker!=null) mCurrLocationMarker.setPosition(midLatLng);
-                        else Log.d("TAG","Marker is null");
-                    });
-
+                    onCameraMove();
 
                     //Triggers when the camera motion is stopped by the user.
                     //When the marker is fixed at a location on the map, the corresponding address is fetched
                     //and a new marker is created
                     mMap.setOnCameraIdleListener(() -> {
+
                         LatLng midLatLng = mMap.getCameraPosition().target;
+
+                        //Converting coordinates to x.x, y.y form for the retrofit request
+                        double lat = midLatLng.latitude;
+                        double lng = midLatLng.longitude;
+                        String lati = Double.toString(lat);
+                        String longi = Double.toString(lng);
+                        latlong = lati + ", " + longi;
 
                         if (mCurrLocationMarker != null){
                             mCurrLocationMarker.remove();
@@ -143,7 +161,7 @@ class MapUtils implements GoogleMap.OnCameraIdleListener {
         };
     }
 
-    static void checkPermissionRequestCode(
+    public static void checkPermissionRequestCode(
         MapsActivity mapsActivity, int requestCode, @NonNull int[] grantResults,
         FusedLocationProviderClient mFusedLocationClient, LocationCallback mLocationCallback) {
         if (requestCode == MY_PERMISSIONS_REQUEST_LOCATION) {
@@ -162,9 +180,74 @@ class MapUtils implements GoogleMap.OnCameraIdleListener {
         }
     }
 
+    //Fetching the venues using retrofit
+    public static void fetchVenues(MapsActivity mapsActivity) {
+
+        APIHandlingService service = RetrofitRequestClass.fetchApi();
+        Call<ResponseModel> call = service.getVenues(latlong, Constants.CATEGORY_ID,Constants.LIMIT,Constants.RADIUS,
+                Constants.CLIENT_ID,Constants.CLIENT_SECRET,Constants.DATE);
+
+        final ProgressDialog progressDialog = new ProgressDialog(mapsActivity,
+                R.style.Theme_AppCompat_DayNight_Dialog);
+        progressDialog.setMessage("Loading venues...");
+        progressDialog.show();
+
+        call.enqueue(new Callback<ResponseModel>() {
+            @Override
+            public void onResponse(@NotNull Call<ResponseModel> call, @NotNull Response<ResponseModel> response) {
+                if (response.body() != null) {
+                    ResponseModel responseModel = response.body();
+                    venues = responseModel.getResponse().getVenues();
+                    venuesList.clear();
+                    if(venues !=null && venues.length > 0){
+                        mMap.clear();
+                        for (Venues venues : venues) {
+                            venuesList.add(venues);
+
+                            double lat = Double.parseDouble(venues.getLocation().getLat());
+                            double lng = Double.parseDouble(venues.getLocation().getLng());
+                            latLng = new LatLng(lat, lng);
+
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(latLng)
+                                    .anchor(0.5f, 1.0f)
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                        }
+                    }
+                    else{
+                        mMap.clear();
+                        Toast.makeText(mapsActivity,"No venues available",Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<ResponseModel> call, @NotNull Throwable t) {
+                Log.e("error", "onFailure: ", t);
+                progressDialog.dismiss();
+            }
+
+        });
+        MapsActivity.venuesList.addAll(venuesList);
+
+    }
+
+
+    private static void onCameraMove(){
+        //When the user moves the camera, the marker anchors itself to the center of the screen
+        mMap.setOnCameraMoveListener(() -> {
+            LatLng midLatLng = mMap.getCameraPosition().target;
+            if (mCurrLocationMarker!=null) mCurrLocationMarker.setPosition(midLatLng);
+            else Log.d("TAG","Marker is null");
+        });
+    }
+
 
     @Override
     public void onCameraIdle() {
         new AddressObtainTask(ma, ma).execute(latLng);
     }
+
 }

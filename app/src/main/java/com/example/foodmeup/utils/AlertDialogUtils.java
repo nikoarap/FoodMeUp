@@ -1,10 +1,11 @@
-package com.example.foodmeup;
+package com.example.foodmeup.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.Settings;
+
+import com.example.foodmeup.R;
 
 public class AlertDialogUtils {
 
@@ -65,19 +66,13 @@ public class AlertDialogUtils {
         return new android.app.AlertDialog.Builder(activity).setMessage(alertMessage)
                 .setTitle(alertTitle)
                 .setCancelable(false)
-                .setPositiveButton(R.string.error_accept, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                        activity.startActivity(new Intent(action));
-                    }
+                .setPositiveButton(R.string.error_accept, (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    activity.startActivity(new Intent(action));
                 })
-                .setNegativeButton(R.string.all_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                        activity.finish();
-                    }
+                .setNegativeButton(R.string.all_cancel, (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    activity.finish();
                 }).create();
     }
 

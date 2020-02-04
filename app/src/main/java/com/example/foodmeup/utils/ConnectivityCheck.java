@@ -1,9 +1,11 @@
-package com.example.foodmeup;
+package com.example.foodmeup.utils;
 
 import android.content.Context;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+
+import java.util.Objects;
 
 class ConnectivityCheck {
 
@@ -28,7 +30,7 @@ class ConnectivityCheck {
     static boolean checkNetworkConnectivity(Context context) {
 
         final NetworkInfo activeNetworkInfo = ((ConnectivityManager)
-                context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+                Objects.requireNonNull(context.getSystemService(Context.CONNECTIVITY_SERVICE))).getActiveNetworkInfo();
 
         return activeNetworkInfo != null
                 && activeNetworkInfo.isConnectedOrConnecting();

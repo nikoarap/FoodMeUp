@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="125dp">
+
+    <ImageView
+        android:id="@+id/venue_img"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/testimg"
+        android:contentDescription="@string/img" />
+
+    <TextView
+        android:id="@+id/venue_name"
+        android:layout_toEndOf="@id/venue_img"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="10dp"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="@color/Black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/venue_name"/>
+
+    <TextView
+        android:id="@+id/venue_category"
+        android:layout_toEndOf="@id/venue_img"
+        android:layout_below="@id/venue_name"
+        android:layout_marginStart="10dp"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/venue_category"/>
+
+    <TextView
+        android:id="@+id/venue_address"
+        android:layout_toEndOf="@id/venue_img"
+        android:layout_below="@id/venue_category"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/customGray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/address"/>
+
+
+
+</RelativeLayout>

@@ -146,4 +146,5 @@
     <color name="Black">#000000</color>
     <color name="transparent">#00000000</color>
     <color name="appcolor">#6495ED</color>
+    <color name="customGray">#bcbcbc</color>
 </resources>

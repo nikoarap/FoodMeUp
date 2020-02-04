@@ -5,7 +5,7 @@
     android:id="@+id/maps_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapsActivity">
+    tools:context=".ui.MapsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -92,6 +92,15 @@
             android:elevation="6dp"
             app:elevation="6dp"
             app:srcCompat="@drawable/baseline_search_white_48dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recView"
+            android:layout_gravity="bottom"
+            android:layout_width="match_parent"
+            android:layout_height="125dp"
+            android:background="@drawable/shadow"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </FrameLayout>
 

@@ -1,4 +1,4 @@
-package com.example.foodmeup;
+package com.example.foodmeup.utils;
 
 import android.content.Context;
 import android.location.Address;

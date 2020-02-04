@@ -1,7 +1,10 @@
-package com.example.foodmeup;
+package com.example.foodmeup.utils;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+
+import com.example.foodmeup.ui.MapsActivity;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
