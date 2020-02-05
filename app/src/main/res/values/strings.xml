@@ -23,5 +23,7 @@
     <string name="error">error fetching data</string>
     <string name="press_back">Press the back button again for exit</string>
     <string name="loading_venues">Loading venues…</string>
-    <string name="sel_ven">Selected Venue</string>
+    <string name="sel_ven">Selected place</string>
+    <string name="press_again">Press once more to enter the selected venue</string>
+    <string name="enter_venue">Enter Venue</string>
 </resources>

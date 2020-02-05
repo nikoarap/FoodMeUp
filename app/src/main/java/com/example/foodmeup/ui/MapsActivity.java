@@ -5,19 +5,19 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.foodmeup.R;
 import com.example.foodmeup.adapters.CarouselAdapter;
-import com.example.foodmeup.models.Venues;
+import com.example.foodmeup.models.Categories;
 import com.example.foodmeup.utils.AddressObtainTask;
 import com.example.foodmeup.utils.AlertDialogUtils;
 import com.example.foodmeup.utils.ConnectionBroadcastReceiver;
 import com.example.foodmeup.utils.Constants;
 import com.example.foodmeup.utils.MapUtils;
-import com.example.foodmeup.utils.PopulateRecyclerView;
 import com.example.foodmeup.utils.Utilities;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -28,7 +28,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -39,22 +38,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, AddressObtainTask.Callback,
-        CarouselAdapter.OnVenueListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, AddressObtainTask.Callback {
 
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationCallback mLocationCallback;
     private ReentrantLock addressObtainedLock;
     public AlertDialog lastAlertDialog;
     private BroadcastReceiver connectionStateReceiver = new ConnectionBroadcastReceiver(this);
-    private PopulateRecyclerView populateRecyclerView;
-    public static ArrayList<Venues> venuesList = new ArrayList<>();
     private boolean buttonIsPushed = false;
+    public static RecyclerView recView;
+    public static CarouselAdapter.OnVenueListener onVenueListener;
+
 
     @BindView(R.id.address_txt) TextView addressText;
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.address_layout) RelativeLayout addressLayout;
-    @BindView(R.id.recView) RecyclerView recView;
+    @BindView(R.id.img_butt) Button venueButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +63,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //ButterKnife library binding all the necessary views
         ButterKnife.bind(this);
 
-        //Hiding the carousel from th UI
+        recView = findViewById((R.id.recView));
+        fab = findViewById((R.id.fab));
+
+        //Hiding the carousel and the button from th UI
         recView.setVisibility(View.GONE);
+        venueButton.setVisibility(View.GONE);
 
         //Custom Toolbar replacing the default one
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -78,26 +81,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (mapFragment != null)
             mapFragment.getMapAsync(this);
 
-        fab.setOnClickListener(v -> {
-            venuesList.clear();
-            buttonIsPushed = true;
-            MapUtils.fetchVenues(this);
+        fab.setOnClickListener(v -> fabClick());
 
-            if(venuesList !=null &&venuesList.size() > 0){
-                fab.hide();
-                populateRecyclerView = new PopulateRecyclerView(Objects.requireNonNull(this),recView);
-                populateRecyclerView.populateSearchView(venuesList,this);
-                addressLayout.setVisibility(View.GONE);
-                addressText.setVisibility(View.GONE);
-                recView.setVisibility(View.VISIBLE);
-                MapUtils.mCurrLocationMarker.remove();
-            }
-            else{
-                Toast.makeText(MapsActivity.this,"No venues available",Toast.LENGTH_SHORT).show();
-            }
-
-        });
-
+        onVenueListener = this::onVenueClick;
     }
 
     @Override
@@ -117,7 +103,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Utilities.registerReceivers(this, connectionStateReceiver);
 
         mLocationCallback = MapUtils.getLocation(this);
-
     }
 
     @Override
@@ -126,14 +111,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (mFusedLocationClient != null)
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
         this.unregisterReceiver(connectionStateReceiver);
-
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
     }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -156,23 +139,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onVenueClick(int position) {
-
-        double lat = Double.parseDouble(venuesList.get(position).getLocation().getLat());
-        double lng = Double.parseDouble(venuesList.get(position).getLocation().getLng());
-        LatLng latLng = new LatLng(lat,lng);
-        MapUtils.mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
-
-    }
-
-
-    @Override
     public void onBackPressed() {
         if(buttonIsPushed){
             fab.show();
             addressLayout.setVisibility(View.VISIBLE);
             addressText.setVisibility(View.VISIBLE);
             recView.setVisibility(View.GONE);
+            venueButton.setVisibility(View.GONE);
             buttonIsPushed = false;
         }
         else{
@@ -187,7 +160,66 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Constants.backButtonCount++;
             }
         }
+    }
 
+    private void fabClick(){
+        buttonIsPushed = true;
+        MapUtils.fetchVenues(this);
+
+        if(MapUtils.venuesList !=null && MapUtils.venuesList.size() > 0){
+
+            fab.hide();
+            addressLayout.setVisibility(View.GONE);
+            addressText.setVisibility(View.GONE);
+            recView.setVisibility(View.VISIBLE);
+
+            hideButtonWhenScrolling();
+            MapUtils.mCurrLocationMarker.remove();
+        }
+        else{
+            MapUtils.mMap.clear();
+            MapUtils.fetchVenues(this);
+            fab.hide();
+            addressLayout.setVisibility(View.GONE);
+            addressText.setVisibility(View.GONE);
+            recView.setVisibility(View.VISIBLE);
+            hideButtonWhenScrolling();
+        }
+    }
+
+    private void onVenueClick(int position){
+
+        Categories[] categories = MapUtils.venuesList.get(position).getCategories();
+
+        String pre = categories[0].getIcon().getPrefix();
+        String suff = "bg_88.png";
+        String iconUrl = pre+suff;
+
+        double lat = Double.parseDouble(MapUtils.venuesList.get(position).getLocation().getLat());
+        double lng = Double.parseDouble(MapUtils.venuesList.get(position).getLocation().getLng());
+        LatLng latLng = new LatLng(lat,lng);
+        MapUtils.mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
+
+        venueButton.setVisibility(View.VISIBLE);
+        venueButton.setOnClickListener(v -> {
+            Intent i = new Intent(MapsActivity.this, VenueDetailsActivity.class);
+            i.putExtra("img", iconUrl);
+            i.putExtra("name", MapUtils.venuesList.get(position).getName());
+            i.putExtra("category", categories[0].getName());
+            i.putExtra("address", MapUtils.venuesList.get(position).getLocation().getAddress());
+            startActivity(i);
+        });
+    }
+
+    //Hiding the EnterVenue button when the user scrolls on the recyclerView
+    private void hideButtonWhenScrolling(){
+        recView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                venueButton.setVisibility(View.GONE);
+            }
+        });
     }
 
 }

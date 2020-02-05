@@ -10,4 +10,5 @@ public class Constants {
     static final String CLIENT_SECRET = "R4HF5JQIDIWPZEU2D1Y32V0AOIE1Z3I50QBX3HCIRJG5J3ZT";
     static final String DATE = "20190131";
     public static int backButtonCount = 0;
+    public static int venueButtonCount = 0;
 }

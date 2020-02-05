@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.foodmeup.api.APIHandlingService;
@@ -50,8 +51,9 @@ public class MapUtils implements GoogleMap.OnCameraIdleListener {
     public static Marker mCurrLocationMarker;
     private final MapsActivity ma = new MapsActivity();
     private static String latlong;
-    private static Venues[] venues;
-    private static ArrayList<Venues> venuesList = new ArrayList<>();
+    public static Venues[] venues;
+    public static ArrayList<Venues> venuesList = new ArrayList<>();
+    private static PopulateRecyclerView populateRecyclerView;
 
     public static FusedLocationProviderClient registerFusedLocationClient(MapsActivity mapsActivity) {
         return LocationServices.getFusedLocationProviderClient(mapsActivity);
@@ -123,7 +125,13 @@ public class MapUtils implements GoogleMap.OnCameraIdleListener {
                             .infoWindowAnchor(0.5f, -0.2f)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
 
-                    onCameraMove();
+
+                    //When the user moves the camera, the marker anchors itself to the center of the screen
+                    mMap.setOnCameraMoveListener(() -> {
+                        LatLng midLatLng = mMap.getCameraPosition().target;
+                        if (mCurrLocationMarker!=null) mCurrLocationMarker.setPosition(midLatLng);
+                        else Log.d("TAG","Marker is null");
+                    });
 
                     //Triggers when the camera motion is stopped by the user.
                     //When the marker is fixed at a location on the map, the corresponding address is fetched
@@ -206,19 +214,24 @@ public class MapUtils implements GoogleMap.OnCameraIdleListener {
 
                             double lat = Double.parseDouble(venues.getLocation().getLat());
                             double lng = Double.parseDouble(venues.getLocation().getLng());
-                            latLng = new LatLng(lat, lng);
+                            LatLng latLng = new LatLng(lat, lng);
 
                             mMap.addMarker(new MarkerOptions()
                                     .position(latLng)
                                     .anchor(0.5f, 1.0f)
                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+                            populateRecyclerView = new PopulateRecyclerView(mapsActivity,MapsActivity.recView);
+                            populateRecyclerView.populateSearchView(venuesList, MapsActivity.onVenueListener);
                         }
                     }
                     else{
                         mMap.clear();
+                        MapsActivity.recView.setVisibility(View.GONE);
                         Toast.makeText(mapsActivity,"No venues available",Toast.LENGTH_SHORT).show();
                     }
                 }
+
 
                 progressDialog.dismiss();
             }
@@ -230,24 +243,11 @@ public class MapUtils implements GoogleMap.OnCameraIdleListener {
             }
 
         });
-        MapsActivity.venuesList.addAll(venuesList);
 
     }
-
-
-    private static void onCameraMove(){
-        //When the user moves the camera, the marker anchors itself to the center of the screen
-        mMap.setOnCameraMoveListener(() -> {
-            LatLng midLatLng = mMap.getCameraPosition().target;
-            if (mCurrLocationMarker!=null) mCurrLocationMarker.setPosition(midLatLng);
-            else Log.d("TAG","Marker is null");
-        });
-    }
-
 
     @Override
     public void onCameraIdle() {
         new AddressObtainTask(ma, ma).execute(latLng);
     }
-
 }
