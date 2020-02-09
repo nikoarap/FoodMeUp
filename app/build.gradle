@@ -53,9 +53,6 @@ dependencies {
     //okHttp interceptor
     implementation "com.squareup.okhttp3:logging-interceptor:4.2.1"
 
-    //okHttp Logging interceptor (for logCat)
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
-
     //cardSlider (Carousel)
     implementation 'com.github.IslamKhSh:CardSlider:1.0.0'
 

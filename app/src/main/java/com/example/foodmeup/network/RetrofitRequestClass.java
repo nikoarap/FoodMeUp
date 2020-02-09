@@ -1,4 +1,4 @@
-package com.example.foodmeup.api;
+package com.example.foodmeup.network;
 
 import com.example.foodmeup.utils.Constants;
 

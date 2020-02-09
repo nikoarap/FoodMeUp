@@ -33,7 +33,7 @@ public class AlertDialogUtils {
         }
         else {
             if(lastAlertDialog != null && lastAlertDialog.isShowing())
-                lastAlertDialog.hide();
+                lastAlertDialog.dismiss();
         }
 
         return lastAlertDialog;

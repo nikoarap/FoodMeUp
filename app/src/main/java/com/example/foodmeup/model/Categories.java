@@ -1,4 +1,4 @@
-package com.example.foodmeup.models;
+package com.example.foodmeup.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

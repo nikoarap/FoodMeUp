@@ -5,7 +5,7 @@
     android:id="@+id/maps_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MapsActivity">
+    tools:context=".ui.maps.MapsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"

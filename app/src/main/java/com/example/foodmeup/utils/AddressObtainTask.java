@@ -19,7 +19,7 @@ public class AddressObtainTask extends AsyncTask<LatLng, Void, String> {
     private final WeakReference<Context> contextWeakReference;
     private final WeakReference<Callback> callbackWeakReference;
 
-    AddressObtainTask(Context context, Callback callback) {
+    public AddressObtainTask(Context context, Callback callback) {
         this.contextWeakReference = new WeakReference<>(context);
         this.callbackWeakReference = new WeakReference<>(callback);
     }

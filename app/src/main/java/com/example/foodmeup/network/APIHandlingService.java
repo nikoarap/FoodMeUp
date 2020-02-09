@@ -1,6 +1,6 @@
-package com.example.foodmeup.api;
+package com.example.foodmeup.network;
 
-import com.example.foodmeup.models.ResponseModel;
+import com.example.foodmeup.model.ResponseModel;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

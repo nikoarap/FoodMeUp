@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 
-import com.example.foodmeup.ui.MapsActivity;
+import com.example.foodmeup.ui.maps.MapsActivity;
 
 import java.util.Objects;
 

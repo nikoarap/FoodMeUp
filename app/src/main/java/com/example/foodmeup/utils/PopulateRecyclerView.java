@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 
 import com.example.foodmeup.adapters.CarouselAdapter;
-import com.example.foodmeup.models.Venues;
+import com.example.foodmeup.model.Venues;
 
 import java.util.ArrayList;
 

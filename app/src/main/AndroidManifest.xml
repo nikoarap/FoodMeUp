@@ -21,7 +21,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name="com.example.foodmeup.ui.MapsActivity"
+            android:name="com.example.foodmeup.ui.maps.MapsActivity"
             android:label="@string/title_activity_maps"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

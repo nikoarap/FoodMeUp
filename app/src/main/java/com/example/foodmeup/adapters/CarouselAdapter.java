@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.foodmeup.R;
-import com.example.foodmeup.models.Categories;
-import com.example.foodmeup.models.Venues;
+import com.example.foodmeup.model.Categories;
+import com.example.foodmeup.model.Venues;
 import com.github.islamkhsh.CardSliderAdapter;
 
 import org.jetbrains.annotations.NotNull;
