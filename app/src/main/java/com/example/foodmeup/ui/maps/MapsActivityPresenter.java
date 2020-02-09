@@ -97,7 +97,6 @@ public class MapsActivityPresenter extends BasePresenter<MapsActivityView> imple
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
-
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(2000);
         mLocationRequest.setFastestInterval(1000);
