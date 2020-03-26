@@ -4,6 +4,7 @@ import com.example.foodmeup.model.ResponseModel;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface APIHandlingService {
@@ -15,6 +16,15 @@ public interface APIHandlingService {
             @Query("categoryId") String categoryId,
             @Query("limit") String limit,
             @Query("radius") String radius,
+            @Query("client_id") String client_id,
+            @Query("client_secret") String client_secret,
+            @Query("v") String date
+    );
+
+    //Get nearby venues
+    @GET("{venueId}")
+    Call<ResponseModel> getVenuesPhoto(
+            @Path("venueId") String venueId,
             @Query("client_id") String client_id,
             @Query("client_secret") String client_secret,
             @Query("v") String date

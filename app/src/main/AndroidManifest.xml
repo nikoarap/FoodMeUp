@@ -32,7 +32,7 @@
         </activity>
 
         <activity
-            android:name="com.example.foodmeup.ui.VenueDetailsActivity"
+            android:name="com.example.foodmeup.ui.venueDetails.VenueDetailsActivity"
             android:label="@string/sel_ven"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

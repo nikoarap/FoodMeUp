@@ -153,4 +153,5 @@ public class MapsActivity extends BaseActivity<MapsActivityPresenter> implements
     public void showVenueButton() {
         venueButton.setVisibility(View.VISIBLE);
     }
+
 }

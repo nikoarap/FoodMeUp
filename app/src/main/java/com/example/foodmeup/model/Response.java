@@ -12,8 +12,14 @@ public class Response implements Parcelable {
     @Expose
     private Venues[] venues;
 
+    @SerializedName("venue")
+    @Expose
+    private Venue venue;
+
+
     private Response(Parcel in) {
         venues = in.createTypedArray(Venues.CREATOR);
+        venue = in.readParcelable(Venue.class.getClassLoader());
     }
 
     public static final Creator<Response> CREATOR = new Creator<Response>() {
@@ -33,6 +39,17 @@ public class Response implements Parcelable {
         return venues;
     }
 
+    public Venue getVenue ()
+    {
+        return venue;
+    }
+
+    public void setVenue (Venue venue)
+    {
+        this.venue = venue;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -40,8 +57,7 @@ public class Response implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeTypedArray(venues, flags);
+        dest.writeParcelable(venue, flags);
     }
-
 }

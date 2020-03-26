@@ -5,10 +5,6 @@ import android.os.Parcelable;
 
 public class Items implements Parcelable {
 
-    private String createdAt;
-
-    private String visibility;
-
     private String prefix;
 
     private String width;
@@ -19,9 +15,8 @@ public class Items implements Parcelable {
 
     private String height;
 
+
     private Items(Parcel in) {
-        createdAt = in.readString();
-        visibility = in.readString();
         prefix = in.readString();
         width = in.readString();
         id = in.readString();
@@ -41,6 +36,56 @@ public class Items implements Parcelable {
         }
     };
 
+    public String getPrefix ()
+    {
+        return prefix;
+    }
+
+    public void setPrefix (String prefix)
+    {
+        this.prefix = prefix;
+    }
+
+    public String getWidth ()
+    {
+        return width;
+    }
+
+    public void setWidth (String width)
+    {
+        this.width = width;
+    }
+
+    public String getId ()
+    {
+        return id;
+    }
+
+    public void setId (String id)
+    {
+        this.id = id;
+    }
+
+    public String getSuffix ()
+    {
+        return suffix;
+    }
+
+    public void setSuffix (String suffix)
+    {
+        this.suffix = suffix;
+    }
+
+    public String getHeight ()
+    {
+        return height;
+    }
+
+    public void setHeight (String height)
+    {
+        this.height = height;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -48,8 +93,6 @@ public class Items implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(createdAt);
-        dest.writeString(visibility);
         dest.writeString(prefix);
         dest.writeString(width);
         dest.writeString(id);

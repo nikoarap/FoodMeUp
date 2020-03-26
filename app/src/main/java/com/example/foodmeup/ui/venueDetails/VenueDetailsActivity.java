@@ -1,26 +1,30 @@
-package com.example.foodmeup.ui;
+package com.example.foodmeup.ui.venueDetails;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.foodmeup.R;
+import com.example.foodmeup.ui.base.BaseActivity;
 
 import java.util.Objects;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class VenueDetailsActivity extends AppCompatActivity {
+public class VenueDetailsActivity extends BaseActivity<VenueDetailsActivityPresenter> implements VenueDetailsActivityView {
+
+    public String venueId;
+    public String imgUrl;
+
 
     @BindView (R.id.venue_img) ImageView venueImg;
     @BindView (R.id.venue_name) TextView venueName;
     @BindView (R.id.venue_category) TextView venueCategory;
     @BindView (R.id.venue_address) TextView venueAddress;
+    @BindView (R.id.toolbar) Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,24 +32,21 @@ public class VenueDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_venue_det_layout);
         ButterKnife.bind(this);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(null);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.back_arrowz));
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-        //gets intent from previous activity along with the passed values
-        Intent i = getIntent();
-        String iconUrl = i.getStringExtra("img");
-        venueName.setText(i.getStringExtra("name"));
-        venueCategory.setText(i.getStringExtra("category"));
-        venueAddress.setText(i.getStringExtra("address"));
+        presenter.getIntent();
+        presenter.setVenuePhoto();
 
-        Glide.with(this)
-                .asBitmap()
-                .load(iconUrl)
-                .into(venueImg);
+    }
 
+    @NonNull
+    @Override
+    protected VenueDetailsActivityPresenter createPresenter() {
+        return new VenueDetailsActivityPresenter(this, this);
     }
 
     @Override

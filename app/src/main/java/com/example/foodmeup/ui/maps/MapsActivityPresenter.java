@@ -20,7 +20,7 @@ import com.example.foodmeup.model.ResponseModel;
 import com.example.foodmeup.model.Venues;
 import com.example.foodmeup.network.APIHandlingService;
 import com.example.foodmeup.network.RetrofitRequestClass;
-import com.example.foodmeup.ui.VenueDetailsActivity;
+import com.example.foodmeup.ui.venueDetails.VenueDetailsActivity;
 import com.example.foodmeup.ui.base.BasePresenter;
 import com.example.foodmeup.utils.AddressObtainTask;
 import com.example.foodmeup.utils.AlertDialogUtils;
@@ -154,6 +154,7 @@ public class MapsActivityPresenter extends BasePresenter<MapsActivityView> imple
 
                     //When the user moves the camera, the marker anchors itself to the center of the screen
                     mMap.setOnCameraMoveListener(() -> {
+                        view.hideVenuesShowAddress();
                         LatLng midLatLng = mMap.getCameraPosition().target;
                         if (mCurrLocationMarker!=null) mCurrLocationMarker.setPosition(midLatLng);
                         else Log.d("TAG","Marker is null");
@@ -257,9 +258,8 @@ public class MapsActivityPresenter extends BasePresenter<MapsActivityView> imple
         addressObtainedLock.unlock();
     }
 
-    //Fetching the venues directly from the presenter and not from the repository to avoid the bug of dis
+    //Fetching the venues directly from the presenter and not from the repository for the moment
     private void fetchVenues() {
-
         APIHandlingService service = RetrofitRequestClass.fetchApi();
         Call<ResponseModel> call = service.getVenues(latlong, Constants.CATEGORY_ID,Constants.LIMIT,Constants.RADIUS,
                 Constants.CLIENT_ID,Constants.CLIENT_SECRET,Constants.DATE);
@@ -289,14 +289,12 @@ public class MapsActivityPresenter extends BasePresenter<MapsActivityView> imple
                                     .position(latLng)
                                     .anchor(0.5f, 1.0f)
                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-
-
                         }
+
                         populateRecyclerView = new PopulateRecyclerView(mapsActivity,mapsActivity.recView);
                         populateRecyclerView.populateSearchView(venuesList, mapsActivity.onVenueListener);
                     }
                     else{
-                        mMap.clear();
                         view.hideVenuesShowAddress();
                         view.messageNoVenuesAvailable();
                     }
@@ -309,7 +307,6 @@ public class MapsActivityPresenter extends BasePresenter<MapsActivityView> imple
                 Log.e("error", "onFailure: ", t);
                 progressDialog.dismiss();
             }
-
         });
     }
 
@@ -345,6 +342,7 @@ public class MapsActivityPresenter extends BasePresenter<MapsActivityView> imple
 
         mapsActivity.venueButton.setOnClickListener(v -> {
             Intent i = new Intent(mapsActivity, VenueDetailsActivity.class);
+            i.putExtra("id",venuesList.get(position).getId());
             i.putExtra("img", iconUrl);
             i.putExtra("name", venuesList.get(position).getName());
             i.putExtra("category", categories[0].getName());
