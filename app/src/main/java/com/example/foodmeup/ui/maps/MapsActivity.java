@@ -51,9 +51,7 @@ public class MapsActivity extends BaseActivity<MapsActivityPresenter> implements
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(null);
-
-        presenter.obtainMapFragment();
-
+        
         //Floating Action Button listener
         fab.setOnClickListener(v -> presenter.onFabClick());
 
