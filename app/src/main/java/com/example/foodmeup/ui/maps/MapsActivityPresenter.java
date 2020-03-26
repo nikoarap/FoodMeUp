@@ -74,7 +74,7 @@ public class MapsActivityPresenter extends BasePresenter<MapsActivityView> imple
     private PopulateRecyclerView populateRecyclerView;
     private boolean buttonIsPushed = false;
 
-    //Instance of the view and repository to communicate with the presenter
+    //Instance of the view and activity to communicate with the presenter
     MapsActivityPresenter(MapsActivityView view, MapsActivity mapsActivity) {
         super(view);
         this.mapsActivity = mapsActivity;

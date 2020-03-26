@@ -21,8 +21,6 @@ public class RetrofitRequestClass {
         return httpClient.build();
     }
 
-
-
     //retrofit instantiation
     private static Retrofit.Builder retrofitBuilder =
             new Retrofit.Builder()

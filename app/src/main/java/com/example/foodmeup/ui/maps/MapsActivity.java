@@ -51,7 +51,7 @@ public class MapsActivity extends BaseActivity<MapsActivityPresenter> implements
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(null);
-        
+
         //Floating Action Button listener
         fab.setOnClickListener(v -> presenter.onFabClick());
 
@@ -103,7 +103,7 @@ public class MapsActivity extends BaseActivity<MapsActivityPresenter> implements
         presenter.onVenueClick(position);
     }
 
-    //View interfacee implementations
+    //Method implementations of the View interface
     @Override
     public void hideAdressShowVenues() {
         fab.hide();
