@@ -2,7 +2,6 @@
 Find the nearest food venues to your location via the Foursquare Search Venues API
 
 ------------
-<b>An application made with Java and the MVP architectural pattern.</b>
 
 Libraries/Dependencies Used:
 --
@@ -13,7 +12,7 @@ Libraries/Dependencies Used:
 
   * okHttp Interceptors
 
-  * IslamKhSh CardSlider
+  * Custom CardSliders
 
   * Glide
 
