@@ -1,5 +1,5 @@
 # FoodMeUp
-Find the nearest food venues to your location via the Foursquare Search Venues API <b>(Java & MVP)</b>
+Find the nearest food venues to your location via the Foursquare Search Venues API
 
 ------------
 <b>An application made with Java and the MVP architectural pattern.</b>
